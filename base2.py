@@ -8,21 +8,21 @@ st.set_page_config(page_title="Dashboard Salud Mental", layout="centered")
 st.title("📊 Dashboard de Análisis de Datos")
 st.subheader("Relaciones entre variables categóricas")
 
-# --- Introduce aquí la URL RAW desde GitHub ---
+# --- URL del archivo CSV desde GitHub ---
 url_csv = st.text_input(
     "🔗 Pega aquí el enlace RAW de tu archivo CSV en GitHub:",
-    placeholder="https://raw.githubusercontent.com/tu_usuario/tu_repo/main/archivo.csv"
+    placeholder="https://raw.githubusercontent.com/tu_usuario/tu_repo/main/Copia%20de%20ejercicio%20analisis%20de%20datos.csv"
 )
 
 if url_csv:
     try:
         df = pd.read_csv(url_csv)
 
-        # Mapear dificultad para recordar
+        # Mapeo para claridad visual
         if 'dificultad_recordar' in df.columns:
             df['dificultad_recordar'] = df['dificultad_recordar'].map({0: 'No', 1: 'Sí'})
 
-        # --- Filtro por género si existe la columna ---
+        # Filtro por género (si existe la columna)
         if 'genero' in df.columns:
             generos_disponibles = df['genero'].dropna().unique().tolist()
             filtro_genero = st.selectbox("Selecciona un género para filtrar:", ["Todos"] + generos_disponibles)
@@ -33,7 +33,7 @@ if url_csv:
 
         st.write(f"Mostrando **{len(df_filtrado)}** registros.")
 
-        # --- MAPA DE CALOR 1: hora_de_despertar vs dificultad_recordar ---
+        # --- MAPA DE CALOR 1 ---
         if 'hora_de_despertar' in df.columns and 'dificultad_recordar' in df.columns:
             st.markdown("### 🔥 Mapa de calor: Hora de despertar vs Dificultad para recordar")
             tabla1 = pd.crosstab(df_filtrado['hora_de_despertar'], df_filtrado['dificultad_recordar'])
@@ -46,9 +46,9 @@ if url_csv:
         else:
             st.error("Faltan columnas para el primer heatmap.")
 
-        # --- MAPA DE CALOR 2: frecuencia_ansiedad vs frecuecia_depresion ---
+        # --- MAPA DE CALOR 2 ---
         if 'frecuencia_ansiedad' in df.columns and 'frecuecia_depresion' in df.columns:
-            st.markdown("### 🔥 Mapa de calor: Ansiedad vs Depresión")
+            st.markdown("### 🔥 Mapa de calor: Frecuencia de ansiedad vs Frecuencia de depresión")
             tabla2 = pd.crosstab(df_filtrado['frecuencia_ansiedad'], df_filtrado['frecuecia_depresion'])
 
             fig2, ax2 = plt.subplots()
