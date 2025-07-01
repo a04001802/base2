@@ -66,4 +66,4 @@ with col1:
 
 with col2:
     st.subheader("Frecuencia de ansiedad vs Frecuencia de depresión")
-    mostrar_heatmap(df_filtrado, "frecuencia_ansiedad", "frecuencia_depresion", "Ansiedad vs Depresión")
+    mostrar_heatmap(df_filtrado, "frecuencia_ansiedad", "frecuecia_depresion", "Ansiedad vs Depresión")
