@@ -3,24 +3,21 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Configuración inicial
+# Configuración de la app
 st.set_page_config(page_title="Dashboard Psicológico", layout="wide")
 
-# URL del archivo CSV en GitHub (RAW)
-url = "https://raw.githubusercontent.com/tu_usuario/tu_repo/main/Copia%20de%20ejercicio%20analisis%20de%20datos.csv"
-
-# Carga de datos
+# Cargar archivo local
 @st.cache_data
 def cargar_datos():
-    df = pd.read_csv(url)
+    df = pd.read_csv("Copia de ejercicio analisis de datos.csv")
     return df
 
 df = cargar_datos()
 
-# Título
+# Título de la app
 st.title("Dashboard de análisis psicológico")
 
-# Mostrar los primeros datos
+# Mostrar datos si el usuario quiere
 if st.checkbox("Mostrar datos"):
     st.dataframe(df.head())
 
@@ -28,27 +25,27 @@ if st.checkbox("Mostrar datos"):
 generos = df['genero'].dropna().unique().tolist()
 genero_seleccionado = st.radio("Filtrar por género", options=["Todos"] + generos)
 
-# Aplicar filtro si se selecciona género
+# Aplicar filtro
 if genero_seleccionado != "Todos":
     df_filtrado = df[df["genero"] == genero_seleccionado]
 else:
     df_filtrado = df
 
-# Función para graficar mapa de calor
+# Función para mostrar mapa de calor
 def mostrar_heatmap(data, x_col, y_col, title):
-    pivot_table = data.pivot_table(index=y_col, columns=x_col, aggfunc='size', fill_value=0)
+    pivot = data.pivot_table(index=y_col, columns=x_col, aggfunc='size', fill_value=0)
     fig, ax = plt.subplots()
-    sns.heatmap(pivot_table, cmap="YlGnBu", annot=True, fmt="d", ax=ax)
+    sns.heatmap(pivot, cmap="YlGnBu", annot=True, fmt="d", ax=ax)
     ax.set_title(title)
     st.pyplot(fig)
 
-# Layout en dos columnas
+# Mostrar los dos mapas de calor en columnas
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Hora de despertar vs Dificultad para recordar")
-    mostrar_heatmap(df_filtrado, "hora_de_despertar", "dificultad_recordar", "Mapa de calor: despertar vs recordar")
+    mostrar_heatmap(df_filtrado, "hora_de_despertar", "dificultad_recordar", "Despertar vs Recordar")
 
 with col2:
-    st.subheader("Frecuencia de ansiedad vs Depresión")
-    mostrar_heatmap(df_filtrado, "frecuencia_ansiedad", "frecuencia_depresion", "Mapa de calor: ansiedad vs depresión")
+    st.subheader("Frecuencia de ansiedad vs Frecuencia de depresión")
+    mostrar_heatmap(df_filtrado, "frecuencia_ansiedad", "frecuencia_depresion", "Ansiedad vs Depresión")
